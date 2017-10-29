@@ -57,6 +57,7 @@
 			this.personerGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.personerGridView.Size = new System.Drawing.Size(798, 267);
 			this.personerGridView.TabIndex = 0;
+			this.personerGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.personerGridView_CellContentClick);
 			// 
 			// kontakt_id
 			// 

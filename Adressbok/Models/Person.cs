@@ -12,7 +12,7 @@ namespace Adressbok.Models
 		public string KontaktNamn { get; set; }
 		public Typ KontaktTyp { get; set; }
 
-		public enum Typ
+		public enum Typ : byte
 		{
 			PersonligKontakt = 0,
 			JobbKontakt = 1,
@@ -25,5 +25,16 @@ namespace Adressbok.Models
 
 			return await DataAccess.ExecuteSelectCommandAsync(commandText);
 		}
+
+		public static Person ParseRow(DataRow row)
+		{
+			return new Person
+			{
+				KontaktID = (int)row["kontakt_id"],
+				KontaktNamn = (string)row["kontakt_namn"],
+				KontaktTyp = (Typ)(byte)row["kontakt_typ"],
+			};
+		}
+
 	}
 }

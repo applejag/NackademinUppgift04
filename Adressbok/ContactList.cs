@@ -15,7 +15,12 @@ namespace Adressbok
 		{
 			DataTable personer = await Person.SelectAll();
 			personerGridView.DataSource = personer;
-			
+		}
+
+		private void personerGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+		{
+			var personer = (DataTable) personerGridView.DataSource;
+			new ContactPage(personer, e.RowIndex).Show();
 		}
 	}
 }
