@@ -20,7 +20,7 @@ namespace Adressbok
 		private void personerGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
 		{
 			var personer = (DataTable) personerGridView.DataSource;
-			new ContactPage(personer, e.RowIndex).Show();
+			new ContactPage(personer, e.RowIndex).ShowDialog();
 		}
 	}
 }
