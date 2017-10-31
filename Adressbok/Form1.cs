@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Adressbok.Models;
 
 namespace Adressbok
 {
@@ -36,14 +29,16 @@ namespace Adressbok
 
 		private static void SetComboboxToEnumThingieMcGig(DataGridViewComboBoxColumn column)
 		{
-			column.ValueType = typeof(short);
+			column.ValueType = typeof(string);
 			column.ValueMember = "Value";
 			column.DisplayMember = "Display";
 			column.DataSource = Enum.GetValues(typeof(KontaktTyper))
 				.OfType<KontaktTyper>()
-				.Select(value => new { Display = value.ToString(), Value = (short)value })
+				.Select(value => new {Display = value.ToString(), Value = ((short)value).ToString()})
 				.ToList();
-			column.DefaultCellStyle.NullValue = new { Display = default(KontaktTyper).ToString(), Value = (short)default(KontaktTyper) };
+
+			//column.DefaultCellStyle.NullValue =
+			//	new { Display = default(KontaktTyper).ToString(), Value = ((short)default(KontaktTyper)).ToString() };
 		}
 
 		private void myDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -56,18 +51,13 @@ namespace Adressbok
 			{
 				DataGridViewCell txtcell = myDataGridView[txtcol.Index, e.RowIndex];
 				DataGridViewCell boxcell = myDataGridView[boxcol.Index, e.RowIndex];
-				txtcell.Value = ((short)boxcell.Value).ToString();
+				txtcell.Value = boxcell.Value;
 			}
 		}
 
 		private void myDataGridView_CurrentCellChanged(object sender, EventArgs e)
 		{
-			
-		}
 
-		private void myDataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-		{
-			throw e.Exception;
 		}
 	}
 }
