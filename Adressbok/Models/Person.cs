@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Xml.XPath;
@@ -14,14 +15,27 @@ namespace Adressbok.Models
 		public string PersonName { get; set; }
 		public string PersonEmail { get; set; }
 		public ContactType PersonType { get; set; }
+		public IReadOnlyList<Telephone> Telephones => _telephones;
+		public IReadOnlyList<Address> Addresses => _addresses;
 
-		public Person(int id, string name, ContactType type, string email)
+		private readonly List<Telephone> _telephones;
+		private readonly List<Address> _addresses;
+
+		public Person(int id, string name, ContactType type, string email, Telephone[] telephones, Address[] addresses)
 		{
 			PersonID = id;
 			PersonName = name;
 			PersonType = type;
 			PersonEmail = email;
+			_telephones = new List<Telephone>(telephones);
+			_addresses = new List<Address>(addresses);
 		}
+
+		public Person(int id, string name, ContactType type, string email)
+			: this(id, name, type, email,
+				  telephones: Telephone.SelectFromPersonID(id),
+				  addresses: Address.SelectFromPersonID(id))
+		{}
 
 		public bool Save()
 		{
@@ -34,9 +48,19 @@ namespace Adressbok.Models
 			};
 
 			using (var data = new DataAccess())
-			{
-				return data.ExecuteNonQuery(query, parameters) == 1;
-			}
+				return data.ExecuteNonQuery(query, parameters) >= 1;
+		}
+
+		public bool Delete()
+		{
+			const string query = "DELETE FROM " + table + " WHERE kontakt_id=@id";
+
+			SqlParameter[] parameters = {
+				new SqlParameter("@id", PersonID),
+			};
+
+			using (var data = new DataAccess())
+				return data.ExecuteNonQuery(query, parameters) >= 1;
 		}
 
 		public static Person Create(string name, ContactType type, string email)
@@ -66,19 +90,6 @@ namespace Adressbok.Models
 			return new Person(id, name, type, email);
 		}
 
-		public static Person[] SelectAll()
-		{
-			const string query = "SELECT * FROM " + table + " ORDER BY kontakt_namn";
-
-			using (var data = new DataAccess())
-			{
-				return data.ExecuteSelectCommand(query).Rows
-					.Cast<DataRow>()
-					.Select(FromDataRow)
-					.ToArray();
-			}
-		}
-
 		public static Person SelectFromID(int id)
 		{
 			const string query = "SELECT TOP 1 * FROM " + table + " WHERE kontakt_id=@id";
@@ -92,6 +103,19 @@ namespace Adressbok.Models
 				DataRowCollection rows = data.ExecuteSelectCommand(query, parameters).Rows;
 
 				return rows.Count == 0 ? null : FromDataRow(rows[0]);
+			}
+		}
+
+		public static Person[] SelectAll()
+		{
+			const string query = "SELECT * FROM " + table + " ORDER BY kontakt_namn";
+
+			using (var data = new DataAccess())
+			{
+				return data.ExecuteSelectCommand(query).Rows
+					.Cast<DataRow>()
+					.Select(FromDataRow)
+					.ToArray();
 			}
 		}
 

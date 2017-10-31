@@ -46,7 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\DataAccess.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Telephone.cs" />
     <Compile Include="TheGrandForm.cs">
       <SubType>Form</SubType>
     </Compile>

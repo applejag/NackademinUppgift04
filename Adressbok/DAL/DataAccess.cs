@@ -1,6 +1,8 @@
 ﻿using System;
+using System.CodeDom;
 using System.Data;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace Adressbok.DAL
 {
@@ -10,9 +12,22 @@ namespace Adressbok.DAL
 
 		public DataAccess()
 		{
+			RetryFromHere:
 			string setting = Properties.Settings.Default.AdressbokConnectionString;
 			conn = new SqlConnection(setting);
-			conn.Open();
+
+			try
+			{
+				conn.Open();
+			}
+			catch
+			{
+				DialogResult result = MessageBox.Show("Failed to open connection to database!", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+				if (result == DialogResult.Retry)
+					goto RetryFromHere;
+
+				throw;
+			}
 		}
 
 		public int ExecuteNonQuery(string commandText, params SqlParameter[] parameters)
@@ -22,7 +37,15 @@ namespace Adressbok.DAL
 				cmd.CommandText = commandText;
 				cmd.CommandType = CommandType.Text;
 				cmd.Parameters.AddRange(parameters);
-				return cmd.ExecuteNonQuery();
+
+				try
+				{
+					return cmd.ExecuteNonQuery();
+				}
+				catch
+				{
+					return 0;
+				}
 			}
 		}
 
@@ -33,7 +56,15 @@ namespace Adressbok.DAL
 				cmd.CommandText = commandText;
 				cmd.CommandType = CommandType.Text;
 				cmd.Parameters.AddRange(parameters);
-				return cmd.ExecuteScalar();
+
+				try
+				{
+					return cmd.ExecuteScalar();
+				}
+				catch
+				{
+					return null;
+				}
 			}
 		}
 
@@ -44,12 +75,19 @@ namespace Adressbok.DAL
 				cmd.CommandText = commandText;
 				cmd.CommandType = CommandType.Text;
 				cmd.Parameters.AddRange(parameters);
-				
-				using (var adapter = new SqlDataAdapter(cmd))
+
+				try
 				{
-					var table = new DataTable();
-					adapter.Fill(table);
-					return table;
+					using (var adapter = new SqlDataAdapter(cmd))
+					{
+						var table = new DataTable();
+						adapter.Fill(table);
+						return table;
+					}
+				}
+				catch
+				{
+					return null;
 				}
 			}
 		}

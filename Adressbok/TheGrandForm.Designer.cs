@@ -42,10 +42,15 @@
 			this.contactEmailTextBox = new System.Windows.Forms.TextBox();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.buttonOpenContact = new System.Windows.Forms.Button();
+			this.labelAddressPostCode = new System.Windows.Forms.Label();
+			this.labelAddressCity = new System.Windows.Forms.Label();
+			this.labelAddressStreet = new System.Windows.Forms.Label();
+			this.contactAddressPostCodeTextBox = new System.Windows.Forms.TextBox();
+			this.contactAddressCityTextBox = new System.Windows.Forms.TextBox();
 			this.labelAddress = new System.Windows.Forms.Label();
 			this.contactAddressRemoveButton = new System.Windows.Forms.Button();
 			this.contactAddressAddButton = new System.Windows.Forms.Button();
-			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.contactAddressStreetTextBox = new System.Windows.Forms.TextBox();
 			this.contactAddressListBox = new System.Windows.Forms.ListBox();
 			this.labelTelephone = new System.Windows.Forms.Label();
 			this.contactTelephoneRemoveButton = new System.Windows.Forms.Button();
@@ -67,43 +72,47 @@
 			this.listBoxPersons.IntegralHeight = false;
 			this.listBoxPersons.Location = new System.Drawing.Point(15, 227);
 			this.listBoxPersons.Name = "listBoxPersons";
-			this.listBoxPersons.Size = new System.Drawing.Size(228, 152);
+			this.listBoxPersons.Size = new System.Drawing.Size(227, 204);
 			this.listBoxPersons.TabIndex = 0;
-			this.listBoxPersons.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBoxPersons_MouseClick);
+			this.listBoxPersons.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CheckIfDeselect);
 			this.listBoxPersons.SelectedIndexChanged += new System.EventHandler(this.listBoxPersons_SelectedIndexChanged);
 			this.listBoxPersons.DoubleClick += new System.EventHandler(this.listBoxPersons_DoubleClick);
 			// 
 			// contactCreateButton
 			// 
-			this.contactCreateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.contactCreateButton.Location = new System.Drawing.Point(171, 356);
+			this.contactCreateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.contactCreateButton.Enabled = false;
+			this.contactCreateButton.Location = new System.Drawing.Point(178, 133);
 			this.contactCreateButton.Name = "contactCreateButton";
 			this.contactCreateButton.Size = new System.Drawing.Size(75, 23);
 			this.contactCreateButton.TabIndex = 1;
 			this.contactCreateButton.Text = "Create";
 			this.contactCreateButton.UseVisualStyleBackColor = true;
+			this.contactCreateButton.Click += new System.EventHandler(this.contactCreateButton_Click);
 			// 
 			// contactSaveButton
 			// 
-			this.contactSaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.contactSaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.contactSaveButton.Enabled = false;
-			this.contactSaveButton.Location = new System.Drawing.Point(90, 356);
+			this.contactSaveButton.Location = new System.Drawing.Point(97, 133);
 			this.contactSaveButton.Name = "contactSaveButton";
 			this.contactSaveButton.Size = new System.Drawing.Size(75, 23);
 			this.contactSaveButton.TabIndex = 2;
 			this.contactSaveButton.Text = "Save";
 			this.contactSaveButton.UseVisualStyleBackColor = true;
+			this.contactSaveButton.Click += new System.EventHandler(this.contactSaveButton_Click);
 			// 
 			// contactDeleteButton
 			// 
-			this.contactDeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.contactDeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.contactDeleteButton.Enabled = false;
-			this.contactDeleteButton.Location = new System.Drawing.Point(9, 356);
+			this.contactDeleteButton.Location = new System.Drawing.Point(16, 133);
 			this.contactDeleteButton.Name = "contactDeleteButton";
 			this.contactDeleteButton.Size = new System.Drawing.Size(75, 23);
 			this.contactDeleteButton.TabIndex = 3;
 			this.contactDeleteButton.Text = "Delete";
 			this.contactDeleteButton.UseVisualStyleBackColor = true;
+			this.contactDeleteButton.Click += new System.EventHandler(this.contactDeleteButton_Click);
 			// 
 			// buttonShowAll
 			// 
@@ -165,7 +174,7 @@
             "Other contact"});
 			this.contactTypeComboBox.Location = new System.Drawing.Point(130, 106);
 			this.contactTypeComboBox.Name = "contactTypeComboBox";
-			this.contactTypeComboBox.Size = new System.Drawing.Size(113, 21);
+			this.contactTypeComboBox.Size = new System.Drawing.Size(123, 21);
 			this.contactTypeComboBox.TabIndex = 9;
 			// 
 			// contactNameTextBox
@@ -175,8 +184,9 @@
 			this.contactNameTextBox.Location = new System.Drawing.Point(130, 28);
 			this.contactNameTextBox.MaxLength = 255;
 			this.contactNameTextBox.Name = "contactNameTextBox";
-			this.contactNameTextBox.Size = new System.Drawing.Size(113, 20);
+			this.contactNameTextBox.Size = new System.Drawing.Size(123, 20);
 			this.contactNameTextBox.TabIndex = 10;
+			this.contactNameTextBox.TextChanged += new System.EventHandler(this.UpdatePersonCreateButtonEnableness);
 			// 
 			// contactEmailTextBox
 			// 
@@ -185,8 +195,9 @@
 			this.contactEmailTextBox.Location = new System.Drawing.Point(130, 67);
 			this.contactEmailTextBox.MaxLength = 255;
 			this.contactEmailTextBox.Name = "contactEmailTextBox";
-			this.contactEmailTextBox.Size = new System.Drawing.Size(113, 20);
+			this.contactEmailTextBox.Size = new System.Drawing.Size(123, 20);
 			this.contactEmailTextBox.TabIndex = 11;
+			this.contactEmailTextBox.TextChanged += new System.EventHandler(this.UpdatePersonCreateButtonEnableness);
 			// 
 			// splitContainer1
 			// 
@@ -204,10 +215,15 @@
 			// 
 			// splitContainer1.Panel2
 			// 
+			this.splitContainer1.Panel2.Controls.Add(this.labelAddressPostCode);
+			this.splitContainer1.Panel2.Controls.Add(this.labelAddressCity);
+			this.splitContainer1.Panel2.Controls.Add(this.labelAddressStreet);
+			this.splitContainer1.Panel2.Controls.Add(this.contactAddressPostCodeTextBox);
+			this.splitContainer1.Panel2.Controls.Add(this.contactAddressCityTextBox);
 			this.splitContainer1.Panel2.Controls.Add(this.labelAddress);
 			this.splitContainer1.Panel2.Controls.Add(this.contactAddressRemoveButton);
 			this.splitContainer1.Panel2.Controls.Add(this.contactAddressAddButton);
-			this.splitContainer1.Panel2.Controls.Add(this.textBox1);
+			this.splitContainer1.Panel2.Controls.Add(this.contactAddressStreetTextBox);
 			this.splitContainer1.Panel2.Controls.Add(this.contactAddressListBox);
 			this.splitContainer1.Panel2.Controls.Add(this.labelTelephone);
 			this.splitContainer1.Panel2.Controls.Add(this.contactTelephoneRemoveButton);
@@ -225,15 +241,16 @@
 			this.splitContainer1.Panel2.Controls.Add(this.labelName);
 			this.splitContainer1.Panel2.Controls.Add(this.contactNameTextBox);
 			this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(6, 12, 12, 12);
-			this.splitContainer1.Size = new System.Drawing.Size(514, 391);
-			this.splitContainer1.SplitterDistance = 252;
+			this.splitContainer1.Size = new System.Drawing.Size(514, 443);
+			this.splitContainer1.SplitterDistance = 251;
+			this.splitContainer1.SplitterWidth = 1;
 			this.splitContainer1.TabIndex = 12;
 			// 
 			// buttonOpenContact
 			// 
 			this.buttonOpenContact.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonOpenContact.Enabled = false;
-			this.buttonOpenContact.Location = new System.Drawing.Point(168, 198);
+			this.buttonOpenContact.Location = new System.Drawing.Point(167, 198);
 			this.buttonOpenContact.Name = "buttonOpenContact";
 			this.buttonOpenContact.Size = new System.Drawing.Size(75, 23);
 			this.buttonOpenContact.TabIndex = 5;
@@ -241,10 +258,64 @@
 			this.buttonOpenContact.UseVisualStyleBackColor = true;
 			this.buttonOpenContact.Click += new System.EventHandler(this.buttonOpenContact_Click);
 			// 
+			// labelAddressPostCode
+			// 
+			this.labelAddressPostCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelAddressPostCode.AutoSize = true;
+			this.labelAddressPostCode.Location = new System.Drawing.Point(13, 352);
+			this.labelAddressPostCode.Name = "labelAddressPostCode";
+			this.labelAddressPostCode.Size = new System.Drawing.Size(55, 13);
+			this.labelAddressPostCode.TabIndex = 26;
+			this.labelAddressPostCode.Text = "Post code";
+			// 
+			// labelAddressCity
+			// 
+			this.labelAddressCity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelAddressCity.AutoSize = true;
+			this.labelAddressCity.Location = new System.Drawing.Point(13, 326);
+			this.labelAddressCity.Name = "labelAddressCity";
+			this.labelAddressCity.Size = new System.Drawing.Size(24, 13);
+			this.labelAddressCity.TabIndex = 25;
+			this.labelAddressCity.Text = "City";
+			// 
+			// labelAddressStreet
+			// 
+			this.labelAddressStreet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.labelAddressStreet.AutoSize = true;
+			this.labelAddressStreet.Location = new System.Drawing.Point(13, 300);
+			this.labelAddressStreet.Name = "labelAddressStreet";
+			this.labelAddressStreet.Size = new System.Drawing.Size(35, 13);
+			this.labelAddressStreet.TabIndex = 24;
+			this.labelAddressStreet.Text = "Street";
+			// 
+			// contactAddressPostCodeTextBox
+			// 
+			this.contactAddressPostCodeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.contactAddressPostCodeTextBox.Location = new System.Drawing.Point(74, 349);
+			this.contactAddressPostCodeTextBox.MaxLength = 255;
+			this.contactAddressPostCodeTextBox.Name = "contactAddressPostCodeTextBox";
+			this.contactAddressPostCodeTextBox.Size = new System.Drawing.Size(117, 20);
+			this.contactAddressPostCodeTextBox.TabIndex = 23;
+			this.contactAddressPostCodeTextBox.TextChanged += new System.EventHandler(this.UpdateAddressAddButtonEnableness);
+			this.contactAddressPostCodeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.KeyPress_AddressPostCode);
+			// 
+			// contactAddressCityTextBox
+			// 
+			this.contactAddressCityTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.contactAddressCityTextBox.Location = new System.Drawing.Point(74, 323);
+			this.contactAddressCityTextBox.MaxLength = 255;
+			this.contactAddressCityTextBox.Name = "contactAddressCityTextBox";
+			this.contactAddressCityTextBox.Size = new System.Drawing.Size(179, 20);
+			this.contactAddressCityTextBox.TabIndex = 22;
+			this.contactAddressCityTextBox.TextChanged += new System.EventHandler(this.UpdateAddressAddButtonEnableness);
+			// 
 			// labelAddress
 			// 
+			this.labelAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelAddress.AutoSize = true;
-			this.labelAddress.Location = new System.Drawing.Point(9, 252);
+			this.labelAddress.Location = new System.Drawing.Point(9, 281);
 			this.labelAddress.Name = "labelAddress";
 			this.labelAddress.Size = new System.Drawing.Size(39, 13);
 			this.labelAddress.TabIndex = 21;
@@ -252,50 +323,56 @@
 			// 
 			// contactAddressRemoveButton
 			// 
-			this.contactAddressRemoveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.contactAddressRemoveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.contactAddressRemoveButton.Enabled = false;
-			this.contactAddressRemoveButton.Location = new System.Drawing.Point(218, 268);
+			this.contactAddressRemoveButton.Location = new System.Drawing.Point(228, 349);
 			this.contactAddressRemoveButton.Name = "contactAddressRemoveButton";
 			this.contactAddressRemoveButton.Size = new System.Drawing.Size(25, 20);
 			this.contactAddressRemoveButton.TabIndex = 20;
 			this.contactAddressRemoveButton.Text = "-";
 			this.contactAddressRemoveButton.UseVisualStyleBackColor = true;
+			this.contactAddressRemoveButton.Click += new System.EventHandler(this.contactAddressRemoveButton_Click);
 			// 
 			// contactAddressAddButton
 			// 
-			this.contactAddressAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.contactAddressAddButton.Location = new System.Drawing.Point(187, 268);
+			this.contactAddressAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.contactAddressAddButton.Location = new System.Drawing.Point(197, 349);
 			this.contactAddressAddButton.Name = "contactAddressAddButton";
 			this.contactAddressAddButton.Size = new System.Drawing.Size(25, 20);
 			this.contactAddressAddButton.TabIndex = 19;
 			this.contactAddressAddButton.Text = "+";
 			this.contactAddressAddButton.UseVisualStyleBackColor = true;
+			this.contactAddressAddButton.Click += new System.EventHandler(this.contactAddressAddButton_Click);
 			// 
-			// textBox1
+			// contactAddressStreetTextBox
 			// 
-			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.contactAddressStreetTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBox1.Location = new System.Drawing.Point(9, 268);
-			this.textBox1.MaxLength = 255;
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(172, 20);
-			this.textBox1.TabIndex = 18;
+			this.contactAddressStreetTextBox.Location = new System.Drawing.Point(74, 297);
+			this.contactAddressStreetTextBox.MaxLength = 255;
+			this.contactAddressStreetTextBox.Name = "contactAddressStreetTextBox";
+			this.contactAddressStreetTextBox.Size = new System.Drawing.Size(179, 20);
+			this.contactAddressStreetTextBox.TabIndex = 18;
+			this.contactAddressStreetTextBox.TextChanged += new System.EventHandler(this.UpdateAddressAddButtonEnableness);
 			// 
 			// contactAddressListBox
 			// 
-			this.contactAddressListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.contactAddressListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.contactAddressListBox.FormattingEnabled = true;
-			this.contactAddressListBox.Location = new System.Drawing.Point(9, 294);
+			this.contactAddressListBox.Location = new System.Drawing.Point(9, 375);
 			this.contactAddressListBox.Name = "contactAddressListBox";
-			this.contactAddressListBox.Size = new System.Drawing.Size(234, 56);
+			this.contactAddressListBox.Size = new System.Drawing.Size(244, 56);
 			this.contactAddressListBox.Sorted = true;
 			this.contactAddressListBox.TabIndex = 17;
+			this.contactAddressListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CheckIfDeselect);
+			this.contactAddressListBox.SelectedIndexChanged += new System.EventHandler(this.contactAddressListBox_SelectedIndexChanged);
 			// 
 			// labelTelephone
 			// 
+			this.labelTelephone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelTelephone.AutoSize = true;
-			this.labelTelephone.Location = new System.Drawing.Point(9, 139);
+			this.labelTelephone.Location = new System.Drawing.Point(9, 168);
 			this.labelTelephone.Name = "labelTelephone";
 			this.labelTelephone.Size = new System.Drawing.Size(101, 13);
 			this.labelTelephone.TabIndex = 16;
@@ -303,53 +380,59 @@
 			// 
 			// contactTelephoneRemoveButton
 			// 
-			this.contactTelephoneRemoveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.contactTelephoneRemoveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.contactTelephoneRemoveButton.Enabled = false;
-			this.contactTelephoneRemoveButton.Location = new System.Drawing.Point(218, 155);
+			this.contactTelephoneRemoveButton.Location = new System.Drawing.Point(228, 183);
 			this.contactTelephoneRemoveButton.Name = "contactTelephoneRemoveButton";
-			this.contactTelephoneRemoveButton.Size = new System.Drawing.Size(25, 20);
+			this.contactTelephoneRemoveButton.Size = new System.Drawing.Size(25, 21);
 			this.contactTelephoneRemoveButton.TabIndex = 15;
 			this.contactTelephoneRemoveButton.Text = "-";
 			this.contactTelephoneRemoveButton.UseVisualStyleBackColor = true;
+			this.contactTelephoneRemoveButton.Click += new System.EventHandler(this.contactTelephoneRemoveButton_Click);
 			// 
 			// contactTelephoneAddButton
 			// 
-			this.contactTelephoneAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.contactTelephoneAddButton.Location = new System.Drawing.Point(187, 155);
+			this.contactTelephoneAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.contactTelephoneAddButton.Location = new System.Drawing.Point(197, 183);
 			this.contactTelephoneAddButton.Name = "contactTelephoneAddButton";
-			this.contactTelephoneAddButton.Size = new System.Drawing.Size(25, 20);
+			this.contactTelephoneAddButton.Size = new System.Drawing.Size(25, 21);
 			this.contactTelephoneAddButton.TabIndex = 14;
 			this.contactTelephoneAddButton.Text = "+";
 			this.contactTelephoneAddButton.UseVisualStyleBackColor = true;
+			this.contactTelephoneAddButton.Click += new System.EventHandler(this.contactTelephoneAddButton_Click);
 			// 
 			// contactTelephoneTextBox
 			// 
-			this.contactTelephoneTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.contactTelephoneTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.contactTelephoneTextBox.Location = new System.Drawing.Point(9, 155);
+			this.contactTelephoneTextBox.Location = new System.Drawing.Point(9, 183);
 			this.contactTelephoneTextBox.MaxLength = 255;
 			this.contactTelephoneTextBox.Name = "contactTelephoneTextBox";
-			this.contactTelephoneTextBox.Size = new System.Drawing.Size(172, 20);
+			this.contactTelephoneTextBox.Size = new System.Drawing.Size(182, 20);
 			this.contactTelephoneTextBox.TabIndex = 13;
+			this.contactTelephoneTextBox.TextChanged += new System.EventHandler(this.contactTelephoneTextBox_TextChanged);
+			this.contactTelephoneTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.KeyPress_TelephoneNumber);
 			// 
 			// contactTelephoneListBox
 			// 
-			this.contactTelephoneListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.contactTelephoneListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.contactTelephoneListBox.FormattingEnabled = true;
-			this.contactTelephoneListBox.Location = new System.Drawing.Point(9, 181);
+			this.contactTelephoneListBox.Location = new System.Drawing.Point(9, 210);
 			this.contactTelephoneListBox.Name = "contactTelephoneListBox";
-			this.contactTelephoneListBox.Size = new System.Drawing.Size(234, 56);
+			this.contactTelephoneListBox.Size = new System.Drawing.Size(244, 56);
 			this.contactTelephoneListBox.Sorted = true;
 			this.contactTelephoneListBox.TabIndex = 12;
+			this.contactTelephoneListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CheckIfDeselect);
+			this.contactTelephoneListBox.SelectedIndexChanged += new System.EventHandler(this.contactTelephoneListBox_SelectedIndexChanged);
 			// 
 			// TheGrandForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(514, 391);
+			this.ClientSize = new System.Drawing.Size(514, 443);
 			this.Controls.Add(this.splitContainer1);
-			this.MinimumSize = new System.Drawing.Size(530, 430);
+			this.MinimumSize = new System.Drawing.Size(530, 482);
 			this.Name = "TheGrandForm";
 			this.Text = "Form1";
 			this.Load += new System.EventHandler(this.TheGrandForm_Load);
@@ -386,9 +469,14 @@
 		private System.Windows.Forms.Label labelAddress;
 		private System.Windows.Forms.Button contactAddressRemoveButton;
 		private System.Windows.Forms.Button contactAddressAddButton;
-		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox contactAddressStreetTextBox;
 		private System.Windows.Forms.ListBox contactAddressListBox;
 		private System.Windows.Forms.Button buttonOpenContact;
+		private System.Windows.Forms.TextBox contactAddressPostCodeTextBox;
+		private System.Windows.Forms.TextBox contactAddressCityTextBox;
+		private System.Windows.Forms.Label labelAddressPostCode;
+		private System.Windows.Forms.Label labelAddressCity;
+		private System.Windows.Forms.Label labelAddressStreet;
 	}
 }
 
