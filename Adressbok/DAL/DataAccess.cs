@@ -26,6 +26,17 @@ namespace Adressbok.DAL
 			}
 		}
 
+		public object ExecuteScalar(string commandText, params SqlParameter[] parameters)
+		{
+			using (SqlCommand cmd = conn.CreateCommand())
+			{
+				cmd.CommandText = commandText;
+				cmd.CommandType = CommandType.Text;
+				cmd.Parameters.AddRange(parameters);
+				return cmd.ExecuteScalar();
+			}
+		}
+
 		public DataTable ExecuteSelectCommand(string commandText, params SqlParameter[] parameters)
 		{
 			using (SqlCommand cmd = conn.CreateCommand())
