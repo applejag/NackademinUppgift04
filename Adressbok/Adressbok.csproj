@@ -46,14 +46,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\DataAccess.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="TheGrandForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="TheGrandForm.Designer.cs">
+      <DependentUpon>TheGrandForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="TheGrandForm.resx">
+      <DependentUpon>TheGrandForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

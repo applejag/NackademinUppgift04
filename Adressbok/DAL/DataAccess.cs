@@ -10,7 +10,7 @@ namespace Adressbok.DAL
 
 		public DataAccess()
 		{
-			string setting = Properties.Settings.Default.Adressbok2ConnectionString;
+			string setting = Properties.Settings.Default.AdressbokConnectionString;
 			conn = new SqlConnection(setting);
 			conn.Open();
 		}
@@ -26,7 +26,7 @@ namespace Adressbok.DAL
 			}
 		}
 
-		public DataSet ExecuteSelectCommand(string commandText, params SqlParameter[] parameters)
+		public DataTable ExecuteSelectCommand(string commandText, params SqlParameter[] parameters)
 		{
 			using (SqlCommand cmd = conn.CreateCommand())
 			{
@@ -36,9 +36,9 @@ namespace Adressbok.DAL
 				
 				using (var adapter = new SqlDataAdapter(cmd))
 				{
-					var set = new DataSet();
-					adapter.Fill(set);
-					return set;
+					var table = new DataTable();
+					adapter.Fill(table);
+					return table;
 				}
 			}
 		}
