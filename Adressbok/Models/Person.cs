@@ -39,9 +39,10 @@ namespace Adressbok.Models
 
 		public bool Save()
 		{
-			const string query = "UPDATE " + table + " SET kontakt_namn=@name, kontakt_typ=@type, epost_adress=@email";
+			const string query = "UPDATE " + table + " SET kontakt_namn=@name, kontakt_typ=@type, epost_adress=@email WHERE kontakt_id=@id";
 
 			SqlParameter[] parameters = {
+				new SqlParameter("@id", PersonID), 
 				new SqlParameter("@name", PersonName ?? string.Empty),
 				new SqlParameter("@type", (short)PersonType),
 				new SqlParameter("@email", PersonEmail ?? string.Empty),

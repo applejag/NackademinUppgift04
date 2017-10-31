@@ -152,6 +152,8 @@ namespace Adressbok
 			contactCreateButton.Enabled = 
 				contactNameTextBox.Text.Length > 0
 				&& contactEmailTextBox.Text.Length > 0;
+			contactSaveButton.Enabled = currentPerson != null
+				&& contactCreateButton.Enabled;
 		}
 
 		private void contactTelephoneTextBox_TextChanged(object sender, EventArgs e)
@@ -233,6 +235,9 @@ namespace Adressbok
 		private void contactSaveButton_Click(object sender, EventArgs e)
 		{
 			if (currentPerson == null) return;
+
+			currentPerson.PersonName = contactNameTextBox.Text;
+			currentPerson.PersonEmail = contactEmailTextBox.Text;
 
 			if (!currentPerson.Save())
 				MessageBox.Show("Something went wrong while saving person...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
