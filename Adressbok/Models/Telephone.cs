@@ -7,7 +7,7 @@ namespace Adressbok.Models
 {
 	public class Telephone
 	{
-		private const string table = "Telefon";
+		internal const string table = "Telefon";
 
 		public int TelephoneID { get; }
 		public string TelephoneNumber { get; set; }

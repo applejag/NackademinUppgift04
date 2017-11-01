@@ -8,11 +8,50 @@ namespace Adressbok
 	public partial class TheGrandForm : Form
 	{
 		private Person currentPerson = null;
-
+		
 		public TheGrandForm()
 		{
 			InitializeComponent();
 			PersonChanged();
+
+			contactTypeComboBox.DataSource = Enum.GetValues(typeof(Person.ContactType));
+
+			searchContactTypeBoxes.DataSource = Enum.GetValues(typeof(Person.ContactType));
+			for (int i = 0; i < searchContactTypeBoxes.Items.Count; i++)
+				searchContactTypeBoxes.SetItemChecked(i, true);
+
+			searchOrderByComboBox.DataSource = new[]
+			{
+				new OrderByItem {Name="Name", Column = "kontakt_namn"},
+				new OrderByItem {Name="E-mail", Column = "epost_adress"},
+				new OrderByItem {Name="Contact type", Column = "kontakt_typ"},
+			};
+
+			searchOrderByComboBox.SelectedIndex = 0;
+		}
+
+		private void TheGrandForm_Load(object sender, EventArgs e)
+		{
+			PerformSearch();
+		}
+
+		private void PerformSearch()
+		{
+			listBoxPersons.Items.Clear();
+			string search = searchTextBox.Text;
+			Person.ContactType[] types = searchContactTypeBoxes.CheckedItems
+				.Cast<Person.ContactType>()
+				.ToArray();
+
+			bool searchEmail = searchEmailBox.Checked;
+			bool searchAddresses = searchAddressesBox.Checked;
+			bool searchTelephones = searchTelephonesBox.Checked;
+
+			bool searchOrderByAscending = searchOrderByAscendingBox.Checked;
+			var searchOrderByItem = (OrderByItem)searchOrderByComboBox.SelectedItem;
+			string searchOrderByQuery = searchOrderByItem.Column + (searchOrderByAscending ? " ASC" : " DESC");
+
+			listBoxPersons.Items.AddRange(Person.SelectSearch(search, types, searchEmail, searchAddresses, searchTelephones, searchOrderByQuery));
 		}
 
 		private void OpenPersonFromList()
@@ -64,15 +103,9 @@ namespace Adressbok
 			contactDeleteButton.Enabled = exists;
 		}
 
-		private void TheGrandForm_Load(object sender, EventArgs e)
-		{
-			contactTypeComboBox.DataSource = Enum.GetValues(typeof(Person.ContactType));
-		}
-
 		private void buttonShowAll_Click(object sender, EventArgs e)
 		{
-			listBoxPersons.Items.Clear();
-			listBoxPersons.Items.AddRange(Person.SelectAll());
+			PerformSearch();
 		}
 
 		private void listBoxPersons_DoubleClick(object sender, EventArgs e)
@@ -227,6 +260,7 @@ namespace Adressbok
 		{
 			if (currentPerson == null) return;
 
+			listBoxPersons.Items.Remove(currentPerson);
 			currentPerson.Delete();
 			currentPerson = null;
 			PersonChanged();
@@ -259,6 +293,18 @@ namespace Adressbok
 			{
 				MessageBox.Show("Something went wrong while creating person...", "Error",
 					MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+
+
+		private struct OrderByItem
+		{
+			public string Name;
+			public string Column;
+
+			public override string ToString()
+			{
+				return Name;
 			}
 		}
 	}

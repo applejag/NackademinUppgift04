@@ -7,7 +7,7 @@ namespace Adressbok.Models
 {
 	public class Address
 	{
-		private const string table = "Adress";
+		internal const string table = "Adress";
 
 		public int AddressID { get; }
 		public string AddressStreet { get; set; }
@@ -83,7 +83,7 @@ namespace Adressbok.Models
 
 		public override string ToString()
 		{
-			return $"{AddressStreet}, {AddressCity} {AddressPostCode:## ###}";
+			return $"{AddressStreet}, {AddressCity} {AddressPostCode:### ##}";
 		}
 	}
 }
