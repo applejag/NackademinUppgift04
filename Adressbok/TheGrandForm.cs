@@ -38,6 +38,7 @@ namespace Adressbok
 		private void PerformSearch()
 		{
 			listBoxPersons.Items.Clear();
+
 			string search = searchTextBox.Text;
 			Person.ContactType[] types = searchContactTypeBoxes.CheckedItems
 				.Cast<Person.ContactType>()
@@ -51,7 +52,15 @@ namespace Adressbok
 			var searchOrderByItem = (OrderByItem)searchOrderByComboBox.SelectedItem;
 			string searchOrderByQuery = searchOrderByItem.Column + (searchOrderByAscending ? " ASC" : " DESC");
 
-			listBoxPersons.Items.AddRange(Person.SelectSearch(search, types, searchEmail, searchAddresses, searchTelephones, searchOrderByQuery));
+			Person[] searchResult = Person.SelectSearch(search, types, searchEmail, searchAddresses, searchTelephones, searchOrderByQuery);
+			if (searchResult != null)
+			{
+				listBoxPersons.Items.AddRange(searchResult);
+			}
+			else
+			{
+				MessageBox.Show("Something went wrong during the search.\n\nProbably an error in the SQL command ¯\\_(ツ)_/¯", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			}
 		}
 
 		private void OpenPersonFromList()

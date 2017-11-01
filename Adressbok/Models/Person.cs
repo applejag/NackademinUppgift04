@@ -103,9 +103,9 @@ namespace Adressbok.Models
 
 			using (var data = new DataAccess())
 			{
-				DataRowCollection rows = data.ExecuteSelectCommand(query, parameters).Rows;
+				DataRowCollection rows = data.ExecuteSelectCommand(query, parameters)?.Rows;
 
-				return rows.Count == 0 ? null : FromDataRow(rows[0]);
+				return rows == null || rows.Count == 0 ? null : FromDataRow(rows[0]);
 			}
 		}
 
@@ -115,7 +115,7 @@ namespace Adressbok.Models
 
 			using (var data = new DataAccess())
 			{
-				return data.ExecuteSelectCommand(query).Rows
+				return data.ExecuteSelectCommand(query)?.Rows
 					.Cast<DataRow>()
 					.Select(FromDataRow)
 					.ToArray();
@@ -145,7 +145,7 @@ namespace Adressbok.Models
 				sb.Append($" OR (SELECT COUNT(*) FROM {Address.table} WHERE" +
 							$" {Address.table}.kontakt_id={table}.kontakt_id" +
 							$" AND (adress_gata LIKE {search}" +
-								$" OR adress_post_nr = REPLACE(@search,' ','')" +
+								$" OR adress_post_nr LIKE REPLACE(@search,' ','')" +
 								$" OR adress_post_ort LIKE {search})) > 0");
 			}
 
@@ -180,7 +180,7 @@ namespace Adressbok.Models
 
 			using (var data = new DataAccess())
 			{
-				return data.ExecuteSelectCommand(query, parameters).Rows
+				return data.ExecuteSelectCommand(query, parameters)?.Rows
 					.Cast<DataRow>()
 					.Select(FromDataRow)
 					.ToArray();
