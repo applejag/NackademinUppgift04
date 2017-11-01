@@ -175,16 +175,16 @@ namespace Adressbok
 		private void UpdateAddressAddButtonEnableness(object sender, EventArgs e)
 		{
 			contactAddressAddButton.Enabled = currentPerson != null
-				&& contactAddressStreetTextBox.Text.Length > 0
-				&& contactAddressCityTextBox.Text.Length > 0
-				&& contactAddressPostCodeTextBox.Text.Length > 0;
+				&& !string.IsNullOrWhiteSpace(contactAddressStreetTextBox.Text)
+				&& !string.IsNullOrWhiteSpace(contactAddressCityTextBox.Text)
+				&& !string.IsNullOrWhiteSpace(contactAddressPostCodeTextBox.Text);
 		}
 
 		private void UpdatePersonCreateButtonEnableness(object sender, EventArgs e)
 		{
-			contactCreateButton.Enabled = 
-				contactNameTextBox.Text.Length > 0
-				&& contactEmailTextBox.Text.Length > 0;
+			contactCreateButton.Enabled =
+				!string.IsNullOrWhiteSpace(contactNameTextBox.Text)
+				&& !string.IsNullOrWhiteSpace(contactEmailTextBox.Text);
 			contactSaveButton.Enabled = currentPerson != null
 				&& contactCreateButton.Enabled;
 		}
@@ -192,7 +192,7 @@ namespace Adressbok
 		private void contactTelephoneTextBox_TextChanged(object sender, EventArgs e)
 		{
 			contactTelephoneAddButton.Enabled = currentPerson != null
-				&& contactTelephoneTextBox.Text.Length > 0;
+				&& !string.IsNullOrWhiteSpace(contactTelephoneTextBox.Text);
 		}
 
 		private void contactTelephoneAddButton_Click(object sender, EventArgs e)
@@ -228,7 +228,7 @@ namespace Adressbok
 			if (currentPerson == null) return;
 
 			string street = contactAddressStreetTextBox.Text;
-			string postCodeString = contactAddressPostCodeTextBox.Text;
+			string postCodeString = contactAddressPostCodeTextBox.Text.Replace(" ", string.Empty);
 			if (!int.TryParse(postCodeString, out int postCode)) postCode = 0;
 			string text = contactAddressCityTextBox.Text;
 

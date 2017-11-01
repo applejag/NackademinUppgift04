@@ -145,7 +145,7 @@ namespace Adressbok.Models
 				sb.Append($" OR (SELECT COUNT(*) FROM {Address.table} WHERE" +
 							$" {Address.table}.kontakt_id={table}.kontakt_id" +
 							$" AND (adress_gata LIKE {search}" +
-								$" OR adress_post_nr LIKE {search}" +
+								$" OR adress_post_nr = REPLACE(@search,' ','')" +
 								$" OR adress_post_ort LIKE {search})) > 0");
 			}
 
