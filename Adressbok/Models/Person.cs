@@ -161,21 +161,14 @@ namespace Adressbok.Models
 			return sb.ToString();
 		}
 
-		public static Person[] SelectSearch(string search, IEnumerable<ContactType> types, bool searchEmail, bool searchAddresses, bool searchTelephones, string orderBy)
+		private static Person[] _SelectSearch(string query, string search)
 		{
-			string query = ConstructSearchQuery(
-				types: types,
-				searchEmail: searchEmail,
-				searchAddresses: searchAddresses,
-				searchTelephones: searchTelephones,
-				orderBy: orderBy);
-
 			if (query == null)
 				return new Person[0];
 
 			SqlParameter[] parameters =
 			{
-				new SqlParameter("@search", search ?? string.Empty), 
+				new SqlParameter("@search", search ?? string.Empty),
 			};
 
 			using (var data = new DataAccess())
@@ -185,6 +178,30 @@ namespace Adressbok.Models
 					.Select(FromDataRow)
 					.ToArray();
 			}
+		}
+
+		private static string searchLastSearch;
+		private static string searchLastQuery;
+
+		public static Person[] SelectSearch(string search, IEnumerable<ContactType> types, bool searchEmail,
+			bool searchAddresses, bool searchTelephones, string orderBy)
+		{
+			string query = ConstructSearchQuery(
+				types: types,
+				searchEmail: searchEmail,
+				searchAddresses: searchAddresses,
+				searchTelephones: searchTelephones,
+				orderBy: orderBy);
+
+			searchLastSearch = search;
+			searchLastQuery = query;
+
+			return _SelectSearch(query, search);
+		}
+
+		public static Person[] SelectSearchAgain()
+		{
+			return _SelectSearch(searchLastQuery, searchLastSearch);
 		}
 
 		public enum ContactType : byte

@@ -37,8 +37,6 @@ namespace Adressbok
 
 		private void PerformSearch()
 		{
-			listBoxPersons.Items.Clear();
-
 			string search = searchTextBox.Text;
 			Person.ContactType[] types = searchContactTypeBoxes.CheckedItems
 				.Cast<Person.ContactType>()
@@ -53,6 +51,18 @@ namespace Adressbok
 			string searchOrderByQuery = searchOrderByItem.Column + (searchOrderByAscending ? " ASC" : " DESC");
 
 			Person[] searchResult = Person.SelectSearch(search, types, searchEmail, searchAddresses, searchTelephones, searchOrderByQuery);
+
+			ApplySearchResult(searchResult);
+		}
+
+		private void PerformSearchAgain()
+		{
+			ApplySearchResult(Person.SelectSearchAgain());
+		}
+
+		private void ApplySearchResult(Person[] searchResult)
+		{
+			listBoxPersons.Items.Clear();
 			if (searchResult != null)
 			{
 				listBoxPersons.Items.AddRange(searchResult);
@@ -297,6 +307,7 @@ namespace Adressbok
 			{
 				currentPerson = person;
 				PersonChanged();
+				PerformSearchAgain();
 			}
 			else
 			{
@@ -315,6 +326,13 @@ namespace Adressbok
 			{
 				return Name;
 			}
+		}
+
+		private void searchOrderByAscendingBox_CheckedChanged(object sender, EventArgs e)
+		{
+			searchOrderByAscendingBox.Text = searchOrderByAscendingBox.Checked
+				? "Ascending"
+				: "Descending";
 		}
 	}
 }
