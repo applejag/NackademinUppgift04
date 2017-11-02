@@ -22,9 +22,9 @@ namespace Adressbok
 
 			searchOrderByComboBox.DataSource = new[]
 			{
-				new OrderByItem {Name="Name", Column = "kontakt_namn"},
-				new OrderByItem {Name="E-mail", Column = "epost_adress"},
-				new OrderByItem {Name="Contact type", Column = "kontakt_typ"},
+				new OrderByItem {Name="Name", ColumnASC = "kontakt_namn ASC", ColumnDESC = "kontakt_namn DESC"},
+				new OrderByItem {Name="E-mail", ColumnASC = "epost_adress ASC", ColumnDESC = "epost_adress DESC, kontakt_namn ASC"},
+				new OrderByItem {Name="Contact type", ColumnASC = "kontakt_typ ASC, kontakt_namn ASC", ColumnDESC = "kontakt_typ DESC, kontakt_namn ASC"},
 			};
 
 			searchOrderByComboBox.SelectedIndex = 0;
@@ -46,9 +46,13 @@ namespace Adressbok
 			bool searchAddresses = searchAddressesBox.Checked;
 			bool searchTelephones = searchTelephonesBox.Checked;
 
-			bool searchOrderByAscending = searchOrderByAscendingBox.Checked;
-			var searchOrderByItem = (OrderByItem)searchOrderByComboBox.SelectedItem;
-			string searchOrderByQuery = searchOrderByItem.Column + (searchOrderByAscending ? " ASC" : " DESC");
+			string searchOrderByQuery = null;
+			if (searchOrderByAscendingBox.Checked)
+			{
+				var searchOrderByItem = (OrderByItem) searchOrderByComboBox.SelectedItem;
+				searchOrderByQuery = searchOrderByAscendingBox.CheckState == CheckState.Checked
+					? searchOrderByItem.ColumnASC : searchOrderByItem.ColumnDESC;
+			}
 
 			Person[] searchResult = Person.SelectSearch(search, types, searchEmail, searchAddresses, searchTelephones, searchOrderByQuery);
 
@@ -320,7 +324,8 @@ namespace Adressbok
 		private struct OrderByItem
 		{
 			public string Name;
-			public string Column;
+			public string ColumnASC;
+			public string ColumnDESC;
 
 			public override string ToString()
 			{
@@ -328,11 +333,25 @@ namespace Adressbok
 			}
 		}
 
-		private void searchOrderByAscendingBox_CheckedChanged(object sender, EventArgs e)
+		private static string SearchOrderFromCheckBoxState(CheckState state)
 		{
-			searchOrderByAscendingBox.Text = searchOrderByAscendingBox.Checked
-				? "Ascending"
-				: "Descending";
+			switch (state)
+			{
+				case CheckState.Checked:
+					return "Ascending";
+				case CheckState.Indeterminate:
+					return "Descending";
+				case CheckState.Unchecked:
+					return "Don't sort";
+				default:
+					throw new ArgumentOutOfRangeException(nameof(state), state, null);
+			}
+		}
+
+		private void searchOrderByAscendingBox_CheckStateChanged(object sender, EventArgs e)
+		{
+			searchOrderByAscendingBox.Text = SearchOrderFromCheckBoxState(searchOrderByAscendingBox.CheckState);
+			searchOrderByComboBox.Enabled = searchOrderByAscendingBox.Checked;
 		}
 	}
 }

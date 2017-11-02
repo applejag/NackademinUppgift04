@@ -156,7 +156,10 @@ namespace Adressbok.Models
 							$" AND (telefon_nr LIKE {search})) > 0");
 			}
 
-			sb.Append($") ORDER BY {orderBy ?? "kontakt_namn ASC"}");
+			sb.Append(")");
+
+			if (!string.IsNullOrWhiteSpace(orderBy))
+				sb.Append($" ORDER BY {orderBy}");
 
 			return sb.ToString();
 		}
