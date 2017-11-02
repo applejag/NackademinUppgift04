@@ -23,6 +23,9 @@ namespace Adressbok.Models
 		private readonly List<Telephone> _telephones;
 		private readonly List<Address> _addresses;
 
+		private static string searchLastSearch;
+		private static string searchLastQuery;
+
 		public Person(int id, string name, ContactType type, string email, Telephone[] telephones, Address[] addresses)
 		{
 			PersonID = id;
@@ -122,41 +125,45 @@ namespace Adressbok.Models
 			}
 		}
 
-		private static string ConstructSearchQuery(IEnumerable<ContactType> types, bool searchEmail, bool searchAddresses, bool searchTelephones, string orderBy)
+		private static string ConstructSearchQuery(string search, IEnumerable<ContactType> types, bool searchEmail, bool searchAddresses, bool searchTelephones, string orderBy)
 		{
 			string typesString = string.Join(", ", types.Select(t => (byte)t).Distinct());
 			if (typesString.Length == 0)
 				return null;
 
-			const string search = "'%'+@search+'%'";
+			const string like = "'%'+@search+'%'";
 			var sb = new StringBuilder();
 
 			sb.Append($"SELECT * FROM {table} WHERE" +
-			          $" kontakt_typ IN ({typesString})" +
-			          $" AND (kontakt_namn LIKE {search}");
+			          $" kontakt_typ IN ({typesString})");
 
-			if (searchEmail)
+			if (!string.IsNullOrWhiteSpace(search))
 			{
-				sb.Append($"OR epost_adress LIKE {search}");
-			}
+				sb.Append($" AND (kontakt_namn LIKE {like}");
 
-			if (searchAddresses)
-			{
-				sb.Append($" OR (SELECT COUNT(*) FROM {Address.table} WHERE" +
-							$" {Address.table}.kontakt_id={table}.kontakt_id" +
-							$" AND (adress_gata LIKE {search}" +
-								$" OR adress_post_nr LIKE REPLACE(@search,' ','')" +
-								$" OR adress_post_ort LIKE {search})) > 0");
-			}
+				if (searchEmail)
+				{
+					sb.Append($"OR epost_adress LIKE {like}");
+				}
 
-			if (searchTelephones)
-			{
-				sb.Append($" OR (SELECT COUNT(*) FROM {Telephone.table} WHERE" +
-							$" {Telephone.table}.kontakt_id={table}.kontakt_id" +
-							$" AND (telefon_nr LIKE {search})) > 0");
-			}
+				if (searchAddresses)
+				{
+					sb.Append($" OR (SELECT COUNT(*) FROM {Address.table} WHERE" +
+					          $" {Address.table}.kontakt_id={table}.kontakt_id" +
+					          $" AND (adress_gata LIKE {like}" +
+					          $" OR adress_post_nr LIKE REPLACE({like},' ','')" +
+					          $" OR adress_post_ort LIKE {like})) > 0");
+				}
 
-			sb.Append(")");
+				if (searchTelephones)
+				{
+					sb.Append($" OR (SELECT COUNT(*) FROM {Telephone.table} WHERE" +
+					          $" {Telephone.table}.kontakt_id={table}.kontakt_id" +
+					          $" AND (telefon_nr LIKE {like})) > 0");
+				}
+
+				sb.Append(")");
+			}
 
 			if (!string.IsNullOrWhiteSpace(orderBy))
 				sb.Append($" ORDER BY {orderBy}");
@@ -183,13 +190,11 @@ namespace Adressbok.Models
 			}
 		}
 
-		private static string searchLastSearch;
-		private static string searchLastQuery;
-
 		public static Person[] SelectSearch(string search, IEnumerable<ContactType> types, bool searchEmail,
 			bool searchAddresses, bool searchTelephones, string orderBy)
 		{
 			string query = ConstructSearchQuery(
+				search: search,
 				types: types,
 				searchEmail: searchEmail,
 				searchAddresses: searchAddresses,
